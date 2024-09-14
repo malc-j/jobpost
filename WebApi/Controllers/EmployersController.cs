@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using JobPost.Models;
 using WebApi.Entities;
+using WebApi.Entities.Repositories;
 
 namespace WebApi.Controllers
 {
@@ -23,16 +24,18 @@ namespace WebApi.Controllers
 
         // GET: api/Employers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Employer>>> GetEmployers()
+        public async Task<IEnumerable<Employer>> GetEmployers()
         {
-            return await _context.Employers.ToListAsync();
+            var repo = new EmployerRepository(_context);
+            return await repo.GetAll();
         }
 
         // GET: api/Employers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Employer>> GetEmployer(string id)
+        public async Task<ActionResult<Employer>> GetEmployer(Guid id)
         {
-            var employer = await _context.Employers.FindAsync(id);
+            var repo = new EmployerRepository(_context);
+            var employer = await repo.GetById(id);
 
             if (employer == null)
             {
@@ -45,18 +48,19 @@ namespace WebApi.Controllers
         // PUT: api/Employers/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployer(string id, Employer employer)
+        public async Task<IActionResult> PutEmployer(Guid id, Employer employer)
         {
-            if (id != employer.Id.ToString())
+            var repo = new EmployerRepository(_context);
+            if (id != employer.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(employer).State = EntityState.Modified;
+            
 
             try
             {
-                await _context.SaveChangesAsync();
+                await repo.Update(employer);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -78,14 +82,14 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Employer>> PostEmployer(Employer employer)
         {
-            _context.Employers.Add(employer);
+            var repo = new EmployerRepository(_context);
             try
             {
-                await _context.SaveChangesAsync();
+                await repo.Insert(employer);
             }
             catch (DbUpdateException)
             {
-                if (EmployerExists(employer.Id.ToString()))
+                if (EmployerExists(employer.Id))
                 {
                     return Conflict();
                 }
@@ -102,21 +106,21 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmployer(Guid id)
         {
-            var employer = await _context.Employers.FindAsync(id);
+            var repo = new EmployerRepository(_context);
+            var employer = await repo.GetById(id);
             if (employer == null)
             {
                 return NotFound();
             }
 
-            _context.Employers.Remove(employer);
-            await _context.SaveChangesAsync();
+            await repo.Delete(employer);
 
             return NoContent();
         }
 
-        private bool EmployerExists(string id)
+        private bool EmployerExists(Guid id)
         {
-            return _context.Employers.Any(e => e.Id.ToString() == id);
+            return _context.Employers.Any(e => e.Id == id);
         }
     }
 }
