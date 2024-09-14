@@ -25,7 +25,7 @@ namespace WebApi.Entities.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<Employer?> GetById(int id)
+        public async Task<Employer?> GetById(Guid id)
         {
             return await _context.Employers.Where(e => e.Id.ToString() == id.ToString()).FirstOrDefaultAsync();
             throw new NotImplementedException();

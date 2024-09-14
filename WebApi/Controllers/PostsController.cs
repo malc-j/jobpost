@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using JobPost.Models;
 using WebApi.Entities;
+using WebApi.Entities.Repositories;
 
 namespace WebApi.Controllers
 {
@@ -23,21 +24,19 @@ namespace WebApi.Controllers
 
         // GET: api/Posts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
+        public async Task<IEnumerable<Post>> GetPosts()
         {
-            return await _context.Posts.ToListAsync();
+            var repo = new PostRepository(_context);
+            var posts = await repo.GetAll();
+            return posts;
         }
 
         // GET: api/Posts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Post>> GetPost(Guid id)
+        public async Task<Post?> GetPost(Guid id)
         {
-            var post = await _context.Posts.FindAsync(id);
-
-            if (post == null)
-            {
-                return NotFound();
-            }
+            var repo = new PostRepository(_context);
+            var post = await repo.GetById(id);
 
             return post;
         }
@@ -78,9 +77,9 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Post>> PostPost(Post post)
         {
-            _context.Posts.Add(post);
-            await _context.SaveChangesAsync();
+            var repo = new PostRepository(_context);
 
+            await repo.Insert(post);
             return CreatedAtAction("GetPost", new { id = post.Id }, post);
         }
 
@@ -88,15 +87,15 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(Guid id)
         {
-            var post = await _context.Posts.FindAsync(id);
+
+            var repo = new PostRepository(_context);
+            var post = await repo.GetById(id);
             if (post == null)
             {
                 return NotFound();
             }
 
-            _context.Posts.Remove(post);
-            await _context.SaveChangesAsync();
-
+            await repo.Delete(post);
             return NoContent();
         }
 

@@ -4,7 +4,7 @@
     {
         public Task<IEnumerable<T>> GetAll();
 
-        public Task<T> GetById(int id);
+        public Task<T> GetById(Guid id);
 
         public Task Insert(T entity);
 
