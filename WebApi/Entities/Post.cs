@@ -4,10 +4,10 @@ namespace JobPost.Models
 {
     public class Post
     {
-		[Key]
-		public Guid Id { get; set; }
+        [Key]
+        public Guid Id { get; set; } = new Guid();
 
-        public int EmployerId { get; set; }
+        public Guid EmployerId { get; set; }
 
         public Employer Employer { get; set; }
 
@@ -21,8 +21,21 @@ namespace JobPost.Models
 
         public DateTime EndDate { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
+        public Post()
+        {
+            
+        }
+
+        public Post(Employer Employer, string Title, string Description, string Country, string City)
+        {
+            this.Employer = Employer;
+            this.Title = Title;
+            this.Description = Description;
+            this.Country = Country;
+            this.City = City;
+        }
 
     }
 }

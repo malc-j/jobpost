@@ -6,7 +6,7 @@ namespace JobPost.Models
     public class Employer
     {
         [Key]
-        public string Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         public string Firstname { get; set; }
 
@@ -18,7 +18,20 @@ namespace JobPost.Models
 
         public string Email { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public Employer()
+        {
+            
+        }
+        public Employer(string Firstname, string Lastname, string Phone, string CompanyName, string Email)
+        {
+            this.Firstname = Firstname;
+            this.Lastname = Lastname;
+            this.Phone = Phone;
+            this.CompanyName = CompanyName;
+            this.Email = Email;               
+        }
 
     }
 }
