@@ -47,7 +47,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmployer(string id, Employer employer)
         {
-            if (id != employer.Id)
+            if (id != employer.Id.ToString())
             {
                 return BadRequest();
             }
@@ -85,7 +85,7 @@ namespace WebApi.Controllers
             }
             catch (DbUpdateException)
             {
-                if (EmployerExists(employer.Id))
+                if (EmployerExists(employer.Id.ToString()))
                 {
                     return Conflict();
                 }
@@ -100,7 +100,7 @@ namespace WebApi.Controllers
 
         // DELETE: api/Employers/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEmployer(string id)
+        public async Task<IActionResult> DeleteEmployer(Guid id)
         {
             var employer = await _context.Employers.FindAsync(id);
             if (employer == null)
@@ -116,7 +116,7 @@ namespace WebApi.Controllers
 
         private bool EmployerExists(string id)
         {
-            return _context.Employers.Any(e => e.Id == id);
+            return _context.Employers.Any(e => e.Id.ToString() == id);
         }
     }
 }

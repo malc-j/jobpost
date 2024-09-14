@@ -24,8 +24,9 @@ namespace WebApi.Migrations
 
             modelBuilder.Entity("JobPost.Models.Employer", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CompanyName")
                         .IsRequired()
@@ -72,12 +73,8 @@ namespace WebApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EmployerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("EmployerId1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("EmployerId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -88,7 +85,7 @@ namespace WebApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployerId1");
+                    b.HasIndex("EmployerId");
 
                     b.ToTable("Posts");
                 });
@@ -97,7 +94,7 @@ namespace WebApi.Migrations
                 {
                     b.HasOne("JobPost.Models.Employer", "Employer")
                         .WithMany()
-                        .HasForeignKey("EmployerId1")
+                        .HasForeignKey("EmployerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
