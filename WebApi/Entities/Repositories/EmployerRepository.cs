@@ -1,5 +1,7 @@
 ﻿using JobPost.Models;
 using Microsoft.EntityFrameworkCore;
+using WebApi.Entities.Context;
+using WebApi.MockData;
 
 namespace WebApi.Entities.Repositories
 {
@@ -10,12 +12,13 @@ namespace WebApi.Entities.Repositories
         public EmployerRepository(AppDbContext context)
         {
             this._context = context;
+            
         }
 
-        public async Task Delete(Employer entity)
+        public async Task<int> Delete(Employer entity)
         {
             _context.Remove(entity);
-            await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
             throw new NotImplementedException();
         }
 
@@ -31,17 +34,17 @@ namespace WebApi.Entities.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task Insert(Employer entity)
+        public async Task<int> Insert(Employer entity)
         {
             _context.Add(entity);
-            await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
             throw new NotImplementedException();
         }
 
-        public async Task Update(Employer entity)
+        public async Task<int> Update(Employer entity)
         {
             _context.Update(entity);
-            await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
             throw new NotImplementedException();
         }
     }

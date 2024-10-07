@@ -1,5 +1,9 @@
+using Azure.Identity;
+using Azure.Storage.Blobs;
 using Microsoft.EntityFrameworkCore;
-using WebApi.Entities;
+using Microsoft.Extensions.Azure;
+using System.Reflection.Metadata;
+using WebApi.Entities.Context;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +18,20 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options => 
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//var connection = String.Empty;
+//if (builder.Environment.IsDevelopment())
+//{
+//    builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.Development.json");
+//    connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
+//}
+//else
+//{
+//    connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
+//}
+
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//    options.UseSqlServer(connection));
 
 var app = builder.Build();
 
