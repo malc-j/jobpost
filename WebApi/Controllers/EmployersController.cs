@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using JobPost.Models;
-using WebApi.Entities;
 using WebApi.Entities.Repositories;
+using WebApi.MockData;
+using WebApi.Entities.Context;
 
 namespace WebApi.Controllers
 {
@@ -26,6 +27,8 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<IEnumerable<Employer>> GetEmployers()
         {
+            var seed = new Seed(_context);
+            await seed.GenerateSeed();
             var repo = new EmployerRepository(_context);
             return await repo.GetAll();
         }
