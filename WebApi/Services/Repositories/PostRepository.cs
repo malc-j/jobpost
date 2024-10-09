@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebApi.Entities.Context;
 
-namespace WebApi.Entities.Repositories
+namespace WebApi.Services.Repositories
 {
     public class PostRepository : IPostRepository
     {
@@ -10,12 +10,12 @@ namespace WebApi.Entities.Repositories
 
         public PostRepository(AppDbContext context)
         {
-            this._context = context;
+            _context = context;
         }
 
         public async Task<int> Delete(Post entity)
         {
-            _context.Posts.Remove(entity);
+            _context.Remove(entity);
             return await _context.SaveChangesAsync();
             throw new NotImplementedException();
         }
@@ -28,7 +28,7 @@ namespace WebApi.Entities.Repositories
 
         public async Task<Post?> GetById(Guid id)
         {
-            return await _context.Posts.Where(p => p.Id== id).FirstOrDefaultAsync();
+            return await _context.Posts.Where(p => p.Id == id).FirstOrDefaultAsync();
             throw new NotImplementedException();
         }
 
@@ -41,7 +41,7 @@ namespace WebApi.Entities.Repositories
 
         public async Task<int> Update(Post entity)
         {
-            _context.Posts.Update(entity);
+            _context.Update(entity);
             return await _context.SaveChangesAsync();
             throw new NotImplementedException();
         }

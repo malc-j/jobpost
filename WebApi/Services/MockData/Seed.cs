@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebApi.Entities.Context;
 
-namespace WebApi.MockData
+namespace WebApi.Services.MockData
 {
     public class Seed
     {
@@ -17,7 +17,7 @@ namespace WebApi.MockData
         {
             var employers = await _context.Employers.ToListAsync();
 
-            if(employers.Count() == 0)
+            if (employers.Count() == 0)
             {
                 List<Employer> mockEmployers = new List<Employer>();
                 _context.Employers.Add(new Employer("Margarethe", "Pankettman", "193-930-1242", "Foundation Building Materials, Inc.", "mpankettman0@digg.com"));
@@ -34,10 +34,10 @@ namespace WebApi.MockData
 
             employers = await _context.Employers.ToListAsync();
 
-            if(employers.Count() != 0)
+            if (employers.Count() != 0)
             {
 
-                _context.Posts.Add(new Post(employers[0],"Database Administrator III", "Other nondisplaced fracture of base of first metacarpal bone, right hand, subsequent encounter for fracture with delayed healing", "Mexico", "La Victoria"));
+                _context.Posts.Add(new Post(employers[0], "Database Administrator III", "Other nondisplaced fracture of base of first metacarpal bone, right hand, subsequent encounter for fracture with delayed healing", "Mexico", "La Victoria"));
                 _context.Posts.Add(new Post(employers[0], "Information Systems Manager", "Unspecified injury of unspecified muscle, fascia and tendon at wrist and hand level, right hand, initial encounter", "Syria", "Arwād"));
                 _context.Posts.Add(new Post(employers[0], "Administrative Assistant IV", "Unspecified injury of unspecified muscle, fascia and tendon at wrist and hand level, right hand, initial encounter", "United States", "St Luis"));
 

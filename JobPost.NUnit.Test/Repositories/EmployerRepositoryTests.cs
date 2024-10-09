@@ -3,11 +3,11 @@ using Moq;
 using Moq.EntityFrameworkCore;
 using NuGet.Protocol;
 using NUnit.Framework.Legacy;
-using WebApi.Controllers;
 using WebApi.Entities.Context;
-using WebApi.Entities.Repositories;
+using WebApi.Services.Repositories;
 
-namespace JobPost.NUnit.Test
+
+namespace JobPost.NUnit.Test.Repositories
 {
     public class EmployerRepositoryTests
     {
@@ -17,8 +17,9 @@ namespace JobPost.NUnit.Test
         [SetUp]
         public void Setup()
         {
+            
             _mock.Setup(p => p.Employers).ReturnsDbSet(GetSampleEmployers());
-            this._repository = new EmployerRepository(_mock.Object);
+            _repository = new EmployerRepository(_mock.Object);
         }
 
         [Test]
@@ -62,12 +63,12 @@ namespace JobPost.NUnit.Test
             var hej = await _repository.Insert(employer);
 
             //Assert
-            _mock.Verify(x => x.SaveChangesAsync(default(CancellationToken)), Times.Once);
+            _mock.Verify(x => x.SaveChangesAsync(default), Times.Once);
 
         }
 
         [Test]
-        public async Task UpdateEmployer_ValidCall() 
+        public async Task UpdateEmployer_ValidCall()
         {
             //Arrange
             var mock = new Mock<AppDbContext>();
@@ -145,7 +146,7 @@ namespace JobPost.NUnit.Test
 
             return output;
         }
-       
+
     }
 
 }

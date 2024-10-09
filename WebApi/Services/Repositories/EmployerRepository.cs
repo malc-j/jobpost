@@ -1,9 +1,8 @@
 ﻿using JobPost.Models;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Entities.Context;
-using WebApi.MockData;
 
-namespace WebApi.Entities.Repositories
+namespace WebApi.Services.Repositories
 {
     public class EmployerRepository : IEmployerRepository
     {
@@ -11,8 +10,8 @@ namespace WebApi.Entities.Repositories
 
         public EmployerRepository(AppDbContext context)
         {
-            this._context = context;
-            
+            _context = context;
+
         }
 
         public async Task<int> Delete(Employer entity)

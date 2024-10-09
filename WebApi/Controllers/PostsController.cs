@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using JobPost.Models;
-using WebApi.Entities.Repositories;
 using WebApi.Entities.Context;
+using WebApi.Services.Repositories;
 
 namespace WebApi.Controllers
 {
