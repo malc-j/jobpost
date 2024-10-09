@@ -28,19 +28,6 @@ namespace WebApi.Entities.Context
             throw new NotImplementedException();
         }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    if (!optionsBuilder.IsConfigured)
-        //    {
-        //        IConfigurationRoot configuration = new ConfigurationBuilder()
-        //           .SetBasePath(Directory.GetCurrentDirectory())
-        //           .AddJsonFile("appsettings.json")
-        //           .Build();
-        //        var connectionString = configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
-        //        optionsBuilder.UseSqlServer(connectionString);
-        //    }
-        //}
-
     }
 
 

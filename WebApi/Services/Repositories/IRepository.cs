@@ -1,4 +1,4 @@
-﻿namespace WebApi.Entities.Repositories
+﻿namespace WebApi.Services.Repositories
 {
     public interface IRepository<T>
     {
