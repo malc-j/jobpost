@@ -13,11 +13,12 @@ namespace WebApi.Services.Repositories
             _context = context;
         }
 
-        public async Task<int> Delete(Post entity)
+        public async Task<bool> Delete(Post entity)
         {
+            var result = 0;
             _context.Remove(entity);
-            return await _context.SaveChangesAsync();
-            throw new NotImplementedException();
+            result = await _context.SaveChangesAsync();
+            return result == 1;
         }
 
         public async Task<IEnumerable<Post>> GetAll()
@@ -32,18 +33,24 @@ namespace WebApi.Services.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<int> Insert(Post entity)
+        public async Task<bool> Insert(Post entity)
         {
             _context.Posts.Add(entity);
-            return await _context.SaveChangesAsync();
-            throw new NotImplementedException();
+             var result = await _context.SaveChangesAsync();
+            return result == 1;
+
         }
 
-        public async Task<int> Update(Post entity)
+        public async Task<bool> Update(Post entity)
         {
             _context.Update(entity);
-            return await _context.SaveChangesAsync();
-            throw new NotImplementedException();
+            var result = await _context.SaveChangesAsync();
+            return result == 1;
+        }
+
+        public bool Exists(Guid id)
+        {
+            return _context.Employers.Any(e => e.Id == id);
         }
     }
 }

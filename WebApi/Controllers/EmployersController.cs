@@ -16,114 +16,118 @@ namespace WebApi.Controllers
     [ApiController]
     public class EmployersController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IEmployerRepository _repository;
 
-        public EmployersController(AppDbContext context)
+        public EmployersController(IEmployerRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
-        // GET: api/Employers
         [HttpGet]
-        public async Task<IEnumerable<Employer>> GetEmployers()
+        public async Task<ActionResult<IEnumerable<Employer>>> GetEmployers()
         {
-            var seed = new Seed(_context);
-            await seed.GenerateSeed();
-            var repo = new EmployerRepository(_context);
-            return await repo.GetAll();
-        }
-
-        // GET: api/Employers/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Employer>> GetEmployer(Guid id)
-        {
-            var repo = new EmployerRepository(_context);
-            var employer = await repo.GetById(id);
-
-            if (employer == null)
+            IEnumerable<Employer> list = new List<Employer>();
+            try
             {
-                return NotFound();
+                list = await _repository.GetAll();
             }
-
-            return employer;
-        }
-
-        // PUT: api/Employers/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployer(Guid id, Employer employer)
-        {
-            var repo = new EmployerRepository(_context);
-            if (id != employer.Id)
+            catch (Exception)
             {
                 return BadRequest();
             }
+            return list.ToList();       
+        }
 
-            
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Employer>> GetEmployer(Guid id)
+        {
+            try
+            {
+                var employer = await _repository.GetById(id);
+                if (employer == null)
+                {
+                    return NotFound();
+                }
+                return employer;
+            }
+            catch (Exception)
+            {
+                // TODO: Better handling and response ----->
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<bool>> PutEmployer(Guid id, Employer employer)
+        {
+            if (id != employer.Id) {    return BadRequest(); }
 
             try
             {
-                await repo.Update(employer);
+               var result = await _repository.Update(employer);
+
+                if(!result)
+                {
+                    return BadRequest();
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EmployerExists(id))
+                if (!_repository.Exists(id))
                 {
                     return NotFound();
                 }
                 else
                 {
-                    throw;
+                    return BadRequest();
                 }
             }
-
-            return NoContent();
+            return Ok();
         }
 
-        // POST: api/Employers
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Employer>> PostEmployer(Employer employer)
         {
-            var repo = new EmployerRepository(_context);
             try
             {
-                await repo.Insert(employer);
+                await _repository.Insert(employer);
             }
             catch (DbUpdateException)
             {
-                if (EmployerExists(employer.Id))
+                if (_repository.Exists(employer.Id))
                 {
                     return Conflict();
                 }
                 else
                 {
-                    throw;
+                    return BadRequest();
                 }
             }
 
             return CreatedAtAction("GetEmployer", new { id = employer.Id }, employer);
         }
 
-        // DELETE: api/Employers/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmployer(Guid id)
         {
-            var repo = new EmployerRepository(_context);
-            var employer = await repo.GetById(id);
+            var employer = await _repository.GetById(id);
             if (employer == null)
             {
                 return NotFound();
             }
+            try
+            {
+               await _repository.Delete(employer);
 
-            await repo.Delete(employer);
+            }
+            catch (Exception)
+            {
 
-            return NoContent();
+                return BadRequest();
+            }
+
+            return Ok();
         }
 
-        private bool EmployerExists(Guid id)
-        {
-            return _context.Employers.Any(e => e.Id == id);
-        }
     }
 }

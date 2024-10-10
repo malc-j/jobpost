@@ -14,37 +14,73 @@ namespace WebApi.Services.Repositories
 
         }
 
-        public async Task<int> Delete(Employer entity)
+        public async Task<bool> Delete(Employer entity)
         {
-            _context.Remove(entity);
-            return await _context.SaveChangesAsync();
-            throw new NotImplementedException();
+            int result = 0;
+            try
+            {
+                _context.Remove(entity);
+                result = await _context.SaveChangesAsync();
+            }
+            catch (Exception) { throw;}
+            return result == 1;
         }
 
         public async Task<IEnumerable<Employer>> GetAll()
         {
-            return await _context.Employers.ToListAsync();
-            throw new NotImplementedException();
+            IEnumerable<Employer> result = new List<Employer>();
+            try
+            {
+                result = await _context.Employers.ToListAsync();
+            }
+            catch (Exception) { throw;}
+            return result;
         }
 
         public async Task<Employer?> GetById(Guid id)
         {
-            return await _context.Employers.Where(e => e.Id.ToString() == id.ToString()).FirstOrDefaultAsync();
-            throw new NotImplementedException();
+            Employer employer;
+            try
+            {
+                employer = await _context.Employers.Where(e => e.Id.ToString() == id.ToString()).FirstOrDefaultAsync();
+            }
+            catch (Exception) { throw;}
+            return employer ;
         }
 
-        public async Task<int> Insert(Employer entity)
+        public async Task<bool> Insert(Employer entity)
         {
-            _context.Add(entity);
-            return await _context.SaveChangesAsync();
-            throw new NotImplementedException();
+            var result = 0;
+            try
+            {
+                _context.Add(entity);
+                result = await _context.SaveChangesAsync();
+            }
+            catch (Exception) { throw;}
+            return result == 1;
         }
 
-        public async Task<int> Update(Employer entity)
+        public async Task<bool> Update(Employer entity)
         {
-            _context.Update(entity);
-            return await _context.SaveChangesAsync();
-            throw new NotImplementedException();
+            int result = 0;
+            try
+            {
+                _context.Update(entity);
+                result = await _context.SaveChangesAsync();
+            }
+            catch (Exception) { throw;};
+            return result == 1;
+        }
+
+        public bool Exists(Guid id)
+        {
+            bool result = false;
+            try
+            {
+                result = _context.Employers.Any(e => e.Id == id);
+            }
+            catch (Exception) { throw;}
+            return result;
         }
     }
 }
