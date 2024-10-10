@@ -25,11 +25,6 @@ namespace WebApi.Services.MockData
                 _context.Employers.Add(new Employer("Ardelis", "Wickrath", "947-408-8129", "LKQ Corporation", "awickrath2@squarespace.com"));
 
                 await _context.SaveChangesAsync();
-
-                //mockEmployers.Add(new Employer("Margarethe", "Pankettman", "193-930-1242", "Foundation Building Materials, Inc.", "mpankettman0@digg.com"));
-                //mockEmployers.Add(new Employer("Mildrid", "Billington", "995-624-1154", "VCA Inc.", "mbillington1@archive.org"));
-                //mockEmployers.Add(new Employer("Ardelis", "Wickrath", "947-408-8129", "LKQ Corporation", "awickrath2@squarespace.com"));
-
             }
 
             employers = await _context.Employers.ToListAsync();
