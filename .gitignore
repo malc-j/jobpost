@@ -150,7 +150,7 @@ coverage*.info
 # Visual Studio code coverage results
 *.coverage
 *.coveragexml
-coveragereport/
+CoverageReport/
 
 # NCrunch
 _NCrunch_*

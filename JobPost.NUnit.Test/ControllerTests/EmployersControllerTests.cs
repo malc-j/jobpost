@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 using WebApi.Controllers;
 using WebApi.Services.Repositories;
 
-namespace JobPost.NUnit.Test.Controllers
+namespace JobPost.NUnit.Test.ControllerTests
 {
-    internal class EmployerControllerTests
+    internal class EmployersControllerTests
     {
         private Mock<IEmployerRepository> _repository;
         private EmployersController _controller { get; set; }
