@@ -15,42 +15,72 @@ namespace WebApi.Services.Repositories
 
         public async Task<bool> Delete(Post entity)
         {
-            var result = 0;
-            _context.Remove(entity);
-            result = await _context.SaveChangesAsync();
+            int result = 0;
+            try
+            {
+                _context.Remove(entity);
+                result = await _context.SaveChangesAsync();
+            }
+            catch (Exception) { throw; }
             return result == 1;
         }
 
         public async Task<IEnumerable<Post>> GetAll()
         {
-            return await _context.Posts.ToListAsync();
-            throw new NotImplementedException();
+            IEnumerable<Post> result = new List<Post>();
+            try
+            {
+                result = await _context.Posts.ToListAsync();
+            }
+            catch (Exception) { throw; }
+            return result;
         }
 
         public async Task<Post?> GetById(Guid id)
         {
-            return await _context.Posts.Where(p => p.Id == id).FirstOrDefaultAsync();
-            throw new NotImplementedException();
+            Post post;
+            try
+            {
+                post = await _context.Posts.Where(e => e.Id.ToString() == id.ToString()).FirstOrDefaultAsync();
+            }
+            catch (Exception) { throw; }
+            return post;
         }
 
         public async Task<bool> Insert(Post entity)
         {
-            _context.Posts.Add(entity);
-             var result = await _context.SaveChangesAsync();
+            var result = 0;
+            try
+            {
+                _context.Add(entity);
+                result = await _context.SaveChangesAsync();
+            }
+            catch (Exception) { throw; }
             return result == 1;
 
         }
 
         public async Task<bool> Update(Post entity)
         {
-            _context.Update(entity);
-            var result = await _context.SaveChangesAsync();
+            int result = 0;
+            try
+            {
+                _context.Update(entity);
+                result = await _context.SaveChangesAsync();
+            }
+            catch (Exception) { throw; };
             return result == 1;
         }
 
         public bool Exists(Guid id)
         {
-            return _context.Employers.Any(e => e.Id == id);
+            bool result = false;
+            try
+            {
+                result = _context.Posts.Any(e => e.Id == id);
+            }
+            catch (Exception) { throw; }
+            return result;
         }
     }
 }

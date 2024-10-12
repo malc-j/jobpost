@@ -15,61 +15,73 @@ namespace WebApi.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IPostRepository _repository;
 
-        public PostsController(AppDbContext context)
+        public PostsController(IPostRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: api/Posts
         [HttpGet]
-        public async Task<IEnumerable<Post>> GetPosts()
+        public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
         {
-            var repo = new PostRepository(_context);
-            var posts = await repo.GetAll();
-            return posts;
+            IEnumerable<Post> result = new List<Post>();
+            try
+            {
+                result = await _repository.GetAll();
+
+            }
+            catch (Exception) { return BadRequest(); }
+            return result.ToList();
         }
 
         // GET: api/Posts/5
         [HttpGet("{id}")]
-        public async Task<Post?> GetPost(Guid id)
+        public async Task<ActionResult<Post?>> GetPost(Guid id)
         {
-            var repo = new PostRepository(_context);
-            var post = await repo.GetById(id);
-
-            return post;
-        }
-
-        // PUT: api/Posts/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPost(Guid id, Post post)
-        {
-            if (id != post.Id)
+            try
             {
+                var post = await _repository.GetById(id);
+                if (post == null)
+                {
+                    return NotFound();
+                }
+                return post;
+            }
+            catch (Exception)
+            {
+                // TODO: Better handling and response ----->
                 return BadRequest();
             }
+        }
 
-            _context.Entry(post).State = EntityState.Modified;
+        [HttpPut("{id}")]
+        public async Task<ActionResult<bool>> PutPost(Guid id, Post post)
+        {
+            if (id != post.Id) { return BadRequest(); }
 
             try
             {
-                await _context.SaveChangesAsync();
+                var result = await _repository.Update(post);
+
+                if (!result)
+                {
+                    return BadRequest();
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PostExists(id))
+                if (!_repository.Exists(id))
                 {
                     return NotFound();
                 }
                 else
                 {
-                    throw;
+                    return BadRequest();
                 }
             }
-
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Posts
@@ -77,9 +89,21 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Post>> PostPost(Post post)
         {
-            var repo = new PostRepository(_context);
-
-            await repo.Insert(post);
+            try
+            {
+                await _repository.Insert(post);
+            }
+            catch (DbUpdateException)
+            {
+                if (_repository.Exists(post.Id))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
             return CreatedAtAction("GetPost", new { id = post.Id }, post);
         }
 
@@ -88,20 +112,24 @@ namespace WebApi.Controllers
         public async Task<IActionResult> DeletePost(Guid id)
         {
 
-            var repo = new PostRepository(_context);
-            var post = await repo.GetById(id);
+            var post = await _repository.GetById(id);
             if (post == null)
             {
                 return NotFound();
             }
+            try
+            {
+                await _repository.Delete(post);
 
-            await repo.Delete(post);
-            return NoContent();
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+
+            return Ok();
         }
 
-        private bool PostExists(Guid id)
-        {
-            return _context.Posts.Any(e => e.Id == id);
-        }
     }
 }
