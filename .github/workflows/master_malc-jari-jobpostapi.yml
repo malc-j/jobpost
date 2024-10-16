@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: D:\a\jobpost\jobpost\WebApi\WebApi.csproj
+          path: D:\a\jobpost\jobpost\
 
   deploy:
     runs-on: windows-latest
