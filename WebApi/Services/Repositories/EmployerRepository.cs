@@ -1,5 +1,5 @@
-﻿using JobPost.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using WebApi.Entities;
 using WebApi.Entities.Context;
 
 namespace WebApi.Services.Repositories

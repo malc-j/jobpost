@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace JobPost.Models
+namespace WebApi.Entities
 {
     public class Employer
     {
