@@ -1,4 +1,4 @@
-﻿using JobPost.Models;
+﻿using WebApi.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebApi.Entities.Context

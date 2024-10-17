@@ -1,4 +1,4 @@
-﻿using JobPost.Models;
+﻿using WebApi.Entities;
 
 namespace WebApi.Services.Repositories
 {
