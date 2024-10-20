@@ -7,11 +7,12 @@ namespace WebApi.Services.Repositories
     public class EmployerRepository : IEmployerRepository
     {
         private AppDbContext _context;
+        private ILogger<EmployerRepository> _logger;
 
-        public EmployerRepository(AppDbContext context)
+        public EmployerRepository(AppDbContext context, ILogger<EmployerRepository> logger)
         {
             _context = context;
-
+            _logger = logger;
         }
 
         public async Task<bool> Delete(Employer entity)
@@ -22,7 +23,11 @@ namespace WebApi.Services.Repositories
                 _context.Remove(entity);
                 result = await _context.SaveChangesAsync();
             }
-            catch (Exception) { throw;}
+            catch (Exception e) {
+
+                _logger.LogCritical(e, "Database operation failed!");
+                throw;
+            }
             return result == 1;
         }
 
@@ -44,7 +49,12 @@ namespace WebApi.Services.Repositories
             {
                 employer = await _context.Employers.Where(e => e.Id.ToString() == id.ToString()).FirstOrDefaultAsync();
             }
-            catch (Exception) { throw;}
+            catch (Exception e)
+            {
+
+                _logger.LogCritical(e, "Database operation failed!");
+                throw;
+            }
             return employer ;
         }
 

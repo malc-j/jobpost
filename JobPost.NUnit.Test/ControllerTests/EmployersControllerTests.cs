@@ -1,8 +1,9 @@
 ﻿using AutoFixture;
-using JobPost.Models;
+using Castle.Core.Logging;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework.Constraints;
 using System;
@@ -11,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebApi.Controllers;
+using WebApi.Entities;
 using WebApi.Services.Repositories;
 
 namespace JobPost.NUnit.Test.ControllerTests
@@ -18,6 +20,8 @@ namespace JobPost.NUnit.Test.ControllerTests
     internal class EmployersControllerTests
     {
         private Mock<IEmployerRepository> _repository;
+
+        public Mock<ILogger<EmployersController>> _logger { get; private set; }
         private EmployersController _controller { get; set; }
         private Fixture _fixture { get; set; }
         // TODO: Maybe make global, or somehow make "reusable" ----->
@@ -31,8 +35,9 @@ namespace JobPost.NUnit.Test.ControllerTests
         public void Setup()
         {
             _repository = new Mock<IEmployerRepository>();
+            _logger = new Mock<ILogger<EmployersController>>();
             _fixture = new Fixture();
-            _controller = new EmployersController(_repository.Object);
+            _controller = new EmployersController(_repository.Object, _logger.Object);
         }
 
 

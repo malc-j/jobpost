@@ -9,21 +9,24 @@ using WebApi.Services.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
-// Use Seri Log
+// Configure SeriLog and create logger factory for dependency injection
+//var loggerConfiguration = new ConfigurationBuilder().AddJsonFile("./appsettings.json").Build();
+//var seriLogger = new LoggerConfiguration().ReadFrom.Configuration(loggerConfiguration).CreateLogger();
+//ILoggerFactory loggingFactory = new LoggerFactory().AddSerilog(seriLogger);
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 // Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IEmployerRepository, EmployerRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
-
 builder.Services.AddDbContext<AppDbContext>(options => 
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddSingleton(loggingFactory);
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

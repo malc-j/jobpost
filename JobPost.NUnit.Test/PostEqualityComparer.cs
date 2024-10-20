@@ -1,10 +1,10 @@
-﻿using JobPost.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebApi.Entities;
 
 namespace JobPost.NUnit.Test
 {

@@ -1,5 +1,4 @@
 ﻿using AutoFixture;
-using JobPost.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -9,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebApi.Controllers;
+using WebApi.Entities;
 using WebApi.Services.Repositories;
 
 namespace JobPost.NUnit.Test.ControllerTests

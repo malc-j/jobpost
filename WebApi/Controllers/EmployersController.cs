@@ -17,10 +17,12 @@ namespace WebApi.Controllers
     public class EmployersController : ControllerBase
     {
         private readonly IEmployerRepository _repository;
+        private readonly ILogger<EmployersController> _logger;
 
-        public EmployersController(IEmployerRepository repository)
+        public EmployersController(IEmployerRepository repository, ILogger<EmployersController> logger)
         {
             _repository = repository;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -31,8 +33,9 @@ namespace WebApi.Controllers
             {
                 list = await _repository.GetAll();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e, "Bad exception caught at {0}", DateTime.UtcNow);
                 return BadRequest();
             }
             return list.ToList();       
