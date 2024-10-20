@@ -1,9 +1,11 @@
 ﻿using AutoFixture;
-using JobPost.Models;
+using Castle.Core.Logging;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.EntityFrameworkCore;
 using NuGet.Protocol;
 using NUnit.Framework.Legacy;
+using WebApi.Entities;
 using WebApi.Entities.Context;
 using WebApi.Services.Repositories;
 
@@ -13,6 +15,7 @@ namespace JobPost.NUnit.Test.RepositoryTests
     public class EmployerRepositoryTests
     {
         private EmployerRepository _repository { get; set; }
+        private Mock<ILogger<EmployerRepository>> _logger { get; set; } = new Mock<ILogger<EmployerRepository>>();
         private Mock<AppDbContext> _mock { get; set; } = new Mock<AppDbContext>();
         private Fixture _fixture;
 
@@ -20,7 +23,7 @@ namespace JobPost.NUnit.Test.RepositoryTests
         public void Setup()
         {
              _fixture = new Fixture();
-            _repository = new EmployerRepository(_mock.Object);
+            _repository = new EmployerRepository(_mock.Object, _logger.Object);
 
         }
 
@@ -45,7 +48,8 @@ namespace JobPost.NUnit.Test.RepositoryTests
         {
             //Arrange
             var mock = new Mock<AppDbContext>();
-            var repository = new EmployerRepository(mock.Object);
+            var mock_logger = new Mock<ILogger<EmployerRepository>>();
+            var repository = new EmployerRepository(mock.Object, _logger.Object);
             var allExpectedEmployers = _fixture.CreateMany<Employer>();
             var expected = allExpectedEmployers.First();
             mock.Setup(x => x.Employers).ReturnsDbSet(allExpectedEmployers);
@@ -63,7 +67,8 @@ namespace JobPost.NUnit.Test.RepositoryTests
         {
             //Arrange
             var mock = new Mock<AppDbContext>();
-            var repository = new EmployerRepository(mock.Object);
+            var mock_logger = new Mock<ILogger<EmployerRepository>>();
+            var repository = new EmployerRepository(mock.Object, _logger.Object);
             var allExpectedEmployers = _fixture.CreateMany<Employer>();
             var expected = allExpectedEmployers.First();
             mock.Setup(x => x.Employers).ReturnsDbSet(allExpectedEmployers);
@@ -80,7 +85,8 @@ namespace JobPost.NUnit.Test.RepositoryTests
         {
             //Arrange
             var mock = new Mock<AppDbContext>();
-            var repository = new EmployerRepository(mock.Object);
+            var mock_logger = new Mock<ILogger<EmployerRepository>>();
+            var repository = new EmployerRepository(mock.Object, _logger.Object);
             Employer employer = _fixture.Create<Employer>();
 
             //Act
@@ -95,7 +101,8 @@ namespace JobPost.NUnit.Test.RepositoryTests
         {
             //Arrange
             var mock = new Mock<AppDbContext>();
-            var repository = new EmployerRepository(mock.Object);
+            var mock_logger = new Mock<ILogger<EmployerRepository>>();
+            var repository = new EmployerRepository(mock.Object, _logger.Object);
             Employer employer = _fixture.Create<Employer>();
             Employer newEmployerValues = _fixture.Create<Employer>();
 
@@ -117,7 +124,8 @@ namespace JobPost.NUnit.Test.RepositoryTests
             //Arrange
             Employer employer = _fixture.Create<Employer>();
             var mock = new Mock<AppDbContext>();
-            var repository = new EmployerRepository(mock.Object);
+            var mock_logger = new Mock<ILogger<EmployerRepository>>();
+            var repository = new EmployerRepository(mock.Object, _logger.Object);
 
             //Act
             await repository.Delete(employer);
@@ -131,7 +139,8 @@ namespace JobPost.NUnit.Test.RepositoryTests
         {
             //Arrange
             var mock = new Mock<AppDbContext>();
-            var repository = new EmployerRepository(mock.Object);
+            var mock_logger = new Mock<ILogger<EmployerRepository>>();
+            var repository = new EmployerRepository(mock.Object, _logger.Object);
             var allExpectedEmployers = _fixture.CreateMany<Employer>();
             var expected = allExpectedEmployers.First();
             mock.Setup(x => x.Employers).ReturnsDbSet(allExpectedEmployers);
@@ -148,7 +157,8 @@ namespace JobPost.NUnit.Test.RepositoryTests
         {
             //Arrange
             var mock = new Mock<AppDbContext>();
-            var repository = new EmployerRepository(mock.Object);
+            var mock_logger = new Mock<ILogger<EmployerRepository>>();
+            var repository = new EmployerRepository(mock.Object, _logger.Object);
             var allExpectedEmployers = _fixture.CreateMany<Employer>();
             var expected = allExpectedEmployers.First();
             mock.Setup(x => x.Employers).ReturnsDbSet(allExpectedEmployers);
