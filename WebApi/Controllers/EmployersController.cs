@@ -53,9 +53,9 @@ namespace WebApi.Controllers
                 }
                 return employer;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // TODO: Better handling and response ----->
+                _logger.LogError(e, "Bad exception caught at {0}", DateTime.UtcNow);
                 return BadRequest();
             }
         }
@@ -74,8 +74,9 @@ namespace WebApi.Controllers
                     return BadRequest();
                 }
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException e)
             {
+                _logger.LogError(e, "Concurrency exception caught at {0}", DateTime.UtcNow);
                 if (!_repository.Exists(id))
                 {
                     return NotFound();
@@ -95,8 +96,9 @@ namespace WebApi.Controllers
             {
                 await _repository.Insert(employer);
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException e)
             {
+                _logger.LogError(e, "Bad Update exception caught at {0}", DateTime.UtcNow);
                 if (_repository.Exists(employer.Id))
                 {
                     return Conflict();
@@ -123,9 +125,9 @@ namespace WebApi.Controllers
                await _repository.Delete(employer);
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                _logger.LogError(e, "Bad exception caught at {0}", DateTime.UtcNow);
                 return BadRequest();
             }
 

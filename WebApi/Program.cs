@@ -10,9 +10,6 @@ using WebApi.Services.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 // Configure SeriLog and create logger factory for dependency injection
-//var loggerConfiguration = new ConfigurationBuilder().AddJsonFile("./appsettings.json").Build();
-//var seriLogger = new LoggerConfiguration().ReadFrom.Configuration(loggerConfiguration).CreateLogger();
-//ILoggerFactory loggingFactory = new LoggerFactory().AddSerilog(seriLogger);
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 // Add services to the container.
 builder.Services.AddControllers();
@@ -20,11 +17,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IEmployerRepository, EmployerRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.Development.json");
+}
+
 builder.Services.AddDbContext<AppDbContext>(options => 
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
-//builder.Services.AddSingleton(loggingFactory);
-
 var app = builder.Build();
 
 
