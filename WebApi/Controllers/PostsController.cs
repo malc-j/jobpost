@@ -16,13 +16,14 @@ namespace WebApi.Controllers
     public class PostsController : ControllerBase
     {
         private readonly IPostRepository _repository;
+        private readonly ILogger<PostsController> _logger;
 
-        public PostsController(IPostRepository repository)
+        public PostsController(IPostRepository repository, ILogger<PostsController> logger)
         {
             _repository = repository;
+            _logger = logger;
         }
 
-        // GET: api/Posts
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
         {
@@ -32,11 +33,13 @@ namespace WebApi.Controllers
                 result = await _repository.GetAll();
 
             }
-            catch (Exception) { return BadRequest(); }
+            catch (Exception e) { 
+                _logger.LogError(e, "Bad exception caught at {0}", DateTime.UtcNow); 
+                return BadRequest(); 
+            }
             return result.ToList();
         }
 
-        // GET: api/Posts/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Post?>> GetPost(Guid id)
         {
@@ -49,9 +52,9 @@ namespace WebApi.Controllers
                 }
                 return post;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // TODO: Better handling and response ----->
+                _logger.LogError(e, "Bad exception caught at {0}", DateTime.UtcNow);
                 return BadRequest();
             }
         }
@@ -70,8 +73,9 @@ namespace WebApi.Controllers
                     return BadRequest();
                 }
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException e)
             {
+                _logger.LogError(e, "Concurrency exception caught at {0}", DateTime.UtcNow);
                 if (!_repository.Exists(id))
                 {
                     return NotFound();
@@ -84,8 +88,6 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        // POST: api/Posts
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Post>> PostPost(Post post)
         {
@@ -93,8 +95,9 @@ namespace WebApi.Controllers
             {
                 await _repository.Insert(post);
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException e)
             {
+                _logger.LogError(e, "Bad Update exception caught at {0}", DateTime.UtcNow);
                 if (_repository.Exists(post.Id))
                 {
                     return Conflict();
@@ -122,9 +125,9 @@ namespace WebApi.Controllers
                 await _repository.Delete(post);
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                _logger.LogError(e, "Bad exception caught at {0}", DateTime.UtcNow);
                 return BadRequest();
             }
 

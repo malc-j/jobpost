@@ -1,6 +1,8 @@
 ﻿using AutoFixture;
+using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -16,9 +18,9 @@ namespace JobPost.NUnit.Test.ControllerTests
     public class PostsControllerTests
     {
         private Mock<IPostRepository> _repository;
+        public Mock<ILogger<PostsController>> _logger { get; private set; }
         private PostsController _controller { get; set; }
         private Fixture _fixture { get; set; }
-        // TODO: Maybe make global, or somehow make "reusable" ----->
         public int _expectedBadRequestCode { get; private set; } = 400;
         public int _expectedGoodRequestCode { get; private set; } = 200;
         public int _expectedNotFoundCode { get; private set; } = 404;
@@ -30,7 +32,8 @@ namespace JobPost.NUnit.Test.ControllerTests
         {
             _repository = new Mock<IPostRepository>();
             _fixture = new Fixture();
-            _controller = new PostsController(_repository.Object);
+            _logger = new Mock<ILogger<PostsController>>();
+            _controller = new PostsController(_repository.Object, _logger.Object);
         }
 
 
